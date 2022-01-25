@@ -1,6 +1,18 @@
 pipeline{
  agent any
-     parameters{
+parameters{
    choice(name:'ami', choices: ['Linux','Windows'])
    choice(name:'Actions', choices:['apply','destroy'])
 }
+stages{
+ stage('Terraform Init'){
+   steps{
+      sh('terraform init');
+      sh('terraform plan');
+   }
+  }
+ stage('Terraform Apply'){
+   steps{
+      sh('terraform ${Actions} -var name="${ami}" --auto-approve');
+   }
+ }
